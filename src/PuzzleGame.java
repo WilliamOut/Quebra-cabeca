@@ -16,6 +16,8 @@ public class PuzzleGame extends JFrame {
 	private int[][] board = new int[4][4];
 	private int emptyRow, emptyCol;
 	private JLabel timerLabel;
+	private JLabel jogadasLabel;
+	private int jogadas = 0;
 	private long startTime;
 	private Timer gameTimer;
 
@@ -32,6 +34,7 @@ public class PuzzleGame extends JFrame {
 
 	private void initializeGame() {
 		int num = 1;
+		jogadas = 0;
 		for (int r = 0; r < 4; r++) {
 			for (int c = 0; c < 4; c++) {
 				board[r][c] = num++;
@@ -106,6 +109,8 @@ public class PuzzleGame extends JFrame {
 
 		JPanel controlPanel = new JPanel();
 		timerLabel = new JLabel("Tempo: 0s");
+		jogadasLabel = new JLabel("Jogadas: " + jogadas);
+		controlPanel.add(jogadasLabel);
 		controlPanel.add(timerLabel);
 
 		JButton restartButton = new JButton("Reiniciar");
@@ -133,6 +138,8 @@ public class PuzzleGame extends JFrame {
 
 			emptyRow = row;
 			emptyCol = col;
+
+			jogadas++;
 
 			if (checkWin()) {
 				gameTimer.stop();
@@ -167,6 +174,7 @@ public class PuzzleGame extends JFrame {
 	private void updateTimer() {
 		long elapsedTime = (System.currentTimeMillis() - startTime) / 1000;
 		timerLabel.setText("Tempo: " + elapsedTime + "s");
+		jogadasLabel.setText("Jogadas: " + jogadas);
 
 		if (elapsedTime == 180) {
 			gameTimer.stop();
