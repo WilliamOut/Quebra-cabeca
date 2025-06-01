@@ -51,10 +51,12 @@ public class PuzzleGame extends JFrame {
 	private void shuffleBoard() {
 		Random rand = new Random();
 
-		for (int i = 0; i < 200; i++) {
-			int direction = rand.nextInt(4);
-			moveTitle(direction);
-		}
+		do
+			for (int i = 0; i < 200; i++) {
+				int direction = rand.nextInt(4);
+				moveTitle(direction);
+			}
+		while (!isSolvable());
 	}
 
 	private boolean moveTitle(int direction) {
@@ -165,6 +167,33 @@ public class PuzzleGame extends JFrame {
 		return true;
 	}
 
+	private boolean isSolvable() {
+		int blankRow = 0;
+		int inversions = 0;
+		int[] flatBoard = new int[15];
+		int index = 0;
+
+		for (int row = 0; row < 4; row++) {
+			for (int col = 0; col < 4; col++) {
+				if (board[row][col] != 0) {
+					flatBoard[index++] = board[row][col];
+				} else {
+					blankRow = 4 - row;
+				}
+			}
+		}
+
+		for (int i = 0; i < 14; i++) {
+			for (int j = i + 1; j < 15; j++) {
+				if (flatBoard[i] > flatBoard[j]) {
+					inversions++;
+				}
+			}
+		}
+
+		return (inversions + blankRow) % 2 == 0;
+	}
+
 	private void startTimer() {
 		startTime = System.currentTimeMillis();
 		gameTimer = new Timer(1000, e -> updateTimer());
@@ -175,12 +204,6 @@ public class PuzzleGame extends JFrame {
 		long elapsedTime = (System.currentTimeMillis() - startTime) / 1000;
 		timerLabel.setText("Tempo: " + elapsedTime + "s");
 		jogadasLabel.setText("Jogadas: " + jogadas);
-
-		if (elapsedTime == 180) {
-			gameTimer.stop();
-			JOptionPane.showMessageDialog(this, "Tempo esgotado! Você perdeu!");
-			restartGame();
-		}
 	}
 
 	private void restartGame() {
