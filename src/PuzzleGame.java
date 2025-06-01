@@ -168,30 +168,27 @@ public class PuzzleGame extends JFrame {
 	}
 
 	private boolean isSolvable() {
-		int blankRow = 0;
-		int inversions = 0;
-		int[] flatBoard = new int[15];
+		int[] flatBoard = new int[16];
+		
 		int index = 0;
-
-		for (int row = 0; row < 4; row++) {
-			for (int col = 0; col < 4; col++) {
-				if (board[row][col] != 0) {
-					flatBoard[index++] = board[row][col];
-				} else {
-					blankRow = 4 - row;
-				}
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				flatBoard[index++] = board[i][j];
 			}
 		}
 
-		for (int i = 0; i < 14; i++) {
-			for (int j = i + 1; j < 15; j++) {
-				if (flatBoard[i] > flatBoard[j]) {
+		int inversions = 0;
+		for (int i = 0; i < 15; i++) {
+			for (int j = i + 1; j < 16; j++) {
+				if (flatBoard[i] != 0 && flatBoard[j] != 0 && flatBoard[i] > flatBoard[j]) {
 					inversions++;
 				}
 			}
 		}
+		
+		int emptyRowFromBottom = 3 - emptyRow;
 
-		return (inversions + blankRow) % 2 == 0;
+		return (inversions + emptyRowFromBottom) % 2 == 0;
 	}
 
 	private void startTimer() {
